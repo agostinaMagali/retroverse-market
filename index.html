@@ -33,7 +33,7 @@
 
         .market-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             max-width: 1200px;
             margin: 0 auto;
@@ -50,6 +50,17 @@
             justify-content: space-between;
         }
 
+        /* DISEÑO DE LAS FOTOS: Ajusta la imagen de forma automática para que se vea perfecta */
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #0f3460;
+        }
+
         .product-id {
             font-family: 'Courier New', Courier, monospace;
             color: var(--accent);
@@ -57,7 +68,7 @@
             font-size: 0.9rem;
         }
 
-        .product-title { font-size: 1.4rem; margin: 10px 0; }
+        .product-title { font-size: 1.3rem; margin: 10px 0; }
         
         .badge {
             display: inline-block;
@@ -95,6 +106,7 @@
             color: white;
             border: none;
             padding: 12px;
+            width: 100%;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
@@ -116,13 +128,63 @@
     <main class="market-container" id="market"></main>
 
     <script>
-        // Inyección de los datos basados en el registro conceptual de la Unidad 2
+        // AQUÍ ESTÁN AGREGADOS TUS DATOS DEL JSON ADAPTADOS AL PROGRAMA PRINCIPAL
         const productos = [
-            { id_producto: "PROD-00001", nombre: "Nintendo Game Boy Clasica", categoria: "Consolas", anio_fab: 1989, estado_cons: "Excelente", precio: 150.00, stock: 3, es_subasta: false },
-            { id_producto: "PROD-00002", nombre: "The Dark Side of the Moon LP", categoria: "Vinilos", anio_fab: 1973, estado_cons: "Mint", precio: 85.50, stock: 1, es_subasta: false },
-            { id_producto: "PROD-00003", nombre: "Camara Analogica Canon AE-1", categoria: "Camaras", anio_fab: 1976, estado_cons: "Restaurado", precio: 210.00, stock: 2, es_subasta: false },
-            { id_producto: "PROD-00004", nombre: "Computadora Commodore 64", categoria: "Computadoras", anio_fab: 1982, estado_cons: "Usado", precio: 320.00, stock: 1, es_subasta: true },
-            { id_producto: "PROD-00005", nombre: "Sony Walkman WM-F10", categoria: "Audio Retro", anio_fab: 1983, estado_cons: "Como nuevo", precio: 180.00, stock: 0, es_subasta: false }
+          {
+            "id_producto": "PROD-00001",
+            "nombre": "Nintendo Game Boy Clasica",
+            "categoria": "Consolas",
+            "anio_fab": 1989,
+            "estado_cons": "Excelente",
+            "precio": 150.00,
+            "stock": 3,
+            "es_subasta": false,
+            "imagen_url": "https://images.unsplash.com/photo-1531525645387-7f14be1bdbbd?w=500&auto=format&fit=crop&q=60" 
+          },
+          {
+            "id_producto": "PROD-00002",
+            "nombre": "The Dark Side of the Moon LP",
+            "categoria": "Vinilos",
+            "anio_fab": 1973,
+            "estado_cons": "Mint",
+            "precio": 85.50,
+            "stock": 1,
+            "es_subasta": false,
+            "imagen_url": "https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=500&auto=format&fit=crop&q=60" 
+          },
+          {
+            "id_producto": "PROD-00003",
+            "nombre": "Camara Analogica Canon AE-1",
+            "categoria": "Camaras",
+            "anio_fab": 1976,
+            "estado_cons": "Restaurado",
+            "precio": 210.00,
+            "stock": 2,
+            "es_subasta": false,
+            "imagen_url": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500&auto=format&fit=crop&q=60" 
+          },
+          {
+            "id_producto": "PROD-00004",
+            "nombre": "Computadora Commodore 64",
+            "categoria": "Computadoras",
+            "anio_fab": 1982,
+            "estado_cons": "Usado",
+            "precio": 320.00,
+            "stock": 1,
+            "es_subasta": true,
+            "imagen_url": "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=500&auto=format&fit=crop&q=60" 
+          },
+          {
+            "id_producto": "PROD-00005",
+            "nombre": "Sony Walkman WM-F10",
+            "categoria": "Audio Retro",
+            "anio_fab": 1983,
+            "estado_cons": "Como nuevo",
+            "precio": 180.00,
+            "stock": 0,
+            "es_subasta": false,
+            "imagen_url": "https://images.unsplash.com/photo-1611001716885-b3402558a62b?w=500&auto=format&fit=crop&q=60" 
+          }
         ];
 
         const container = document.getElementById('market');
@@ -133,15 +195,16 @@
                 const card = document.createElement('div');
                 card.className = "product-card";
 
-                // Lógica de visualización dinámica de etiquetas según el estado del registro
                 const badgeSubasta = prod.es_subasta ? `<span class="badge badge-auction">SUBASTA</span>` : '';
                 const badgeStock = prod.stock > 0 ? 
                     `<span class="badge badge-stock">Stock: ${prod.stock}</span>` : 
                     `<span class="badge badge-out">Sin Stock</span>`;
 
+                // Renderizamos la tarjeta incluyendo el elemento de imagen HTML (img) con la URL correspondiente
                 card.innerHTML = `
                     <div>
                         <span class="product-id">🔑 CLAVE: ${prod.id_producto}</span>
+                        <img src="${prod.imagen_url}" alt="${prod.nombre}" class="product-image">
                         <h2 class="product-title">${prod.nombre}</h2>
                         <div>
                             <span class="badge">${prod.categoria}</span>
@@ -164,7 +227,6 @@
             });
         }
 
-        // Lógica interactiva que simula la afectación del registro en memoria (reducción de stock)
         function simularCompra(id) {
             const productoSeleccionado = productos.find(p => p.id_producto === id);
             if(productoSeleccionado && productoSeleccionado.stock > 0) {
