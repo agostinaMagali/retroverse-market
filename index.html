@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RetroVerse Market - Prototipo AED</title>
+    <style>
+        :root {
+            --bg-color: #1a1a2e;
+            --card-bg: #16213e;
+            --accent: #e94560;
+            --text-main: #ffffff;
+            --text-muted: #b2bec3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 20px;
+        }
+
+        h1 { margin: 0; color: var(--accent); font-size: 2.5rem; }
+        .subtitle { color: var(--text-muted); font-size: 1rem; margin-top: 5px; }
+
+        .market-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 1px solid #0f3460;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-id {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .product-title { font-size: 1.4rem; margin: 10px 0; }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 5px;
+            background-color: #0f3460;
+        }
+        
+        .badge-auction { background-color: #f53b57; }
+        .badge-stock { background-color: #05c46b; }
+        .badge-out { background-color: #3d3d3d; }
+
+        .details-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .details-list li { margin-bottom: 5px; }
+
+        .price-tag {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #00d2d3;
+            margin: 10px 0;
+        }
+
+        .btn-action {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .btn-action:hover { background-color: #ff6b81; }
+        .btn-action:disabled { background-color: #485460; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>RetroVerse Market</h1>
+        <div class="subtitle">E-commerce de Coleccionables Estructurado - Unidad 2 AED</div>
+    </header>
+
+    <main class="market-container" id="market"></main>
+
+    <script>
+        // Inyección de los datos basados en el registro conceptual de la Unidad 2
+        const productos = [
+            { id_producto: "PROD-00001", nombre: "Nintendo Game Boy Clasica", categoria: "Consolas", anio_fab: 1989, estado_cons: "Excelente", precio: 150.00, stock: 3, es_subasta: false },
+            { id_producto: "PROD-00002", nombre: "The Dark Side of the Moon LP", categoria: "Vinilos", anio_fab: 1973, estado_cons: "Mint", precio: 85.50, stock: 1, es_subasta: false },
+            { id_producto: "PROD-00003", nombre: "Camara Analogica Canon AE-1", categoria: "Camaras", anio_fab: 1976, estado_cons: "Restaurado", precio: 210.00, stock: 2, es_subasta: false },
+            { id_producto: "PROD-00004", nombre: "Computadora Commodore 64", categoria: "Computadoras", anio_fab: 1982, estado_cons: "Usado", precio: 320.00, stock: 1, es_subasta: true },
+            { id_producto: "PROD-00005", nombre: "Sony Walkman WM-F10", categoria: "Audio Retro", anio_fab: 1983, estado_cons: "Como nuevo", precio: 180.00, stock: 0, es_subasta: false }
+        ];
+
+        const container = document.getElementById('market');
+
+        function renderMarket() {
+            container.innerHTML = "";
+            productos.forEach((prod) => {
+                const card = document.createElement('div');
+                card.className = "product-card";
+
+                // Lógica de visualización dinámica de etiquetas según el estado del registro
+                const badgeSubasta = prod.es_subasta ? `<span class="badge badge-auction">SUBASTA</span>` : '';
+                const badgeStock = prod.stock > 0 ? 
+                    `<span class="badge badge-stock">Stock: ${prod.stock}</span>` : 
+                    `<span class="badge badge-out">Sin Stock</span>`;
+
+                card.innerHTML = `
+                    <div>
+                        <span class="product-id">🔑 CLAVE: ${prod.id_producto}</span>
+                        <h2 class="product-title">${prod.nombre}</h2>
+                        <div>
+                            <span class="badge">${prod.categoria}</span>
+                            ${badgeSubasta}
+                            ${badgeStock}
+                        </div>
+                        <ul class="details-list">
+                            <li><strong>Año:</strong> ${prod.anio_fab}</li>
+                            <li><strong>Conservación:</strong> ${prod.estado_cons}</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="price-tag">USD $${prod.precio.toFixed(2)}</div>
+                        <button class="btn-action" ${prod.stock === 0 ? 'disabled' : ''} onclick="simularCompra('${prod.id_producto}')">
+                            ${prod.es_subasta ? 'Ofertar' : 'Comprar'}
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Lógica interactiva que simula la afectación del registro en memoria (reducción de stock)
+        function simularCompra(id) {
+            const productoSeleccionado = productos.find(p => p.id_producto === id);
+            if(productoSeleccionado && productoSeleccionado.stock > 0) {
+                productoSeleccionado.stock--;
+                alert(`¡Éxito! Operación procesada para el registro con clave: ${id}.\nStock actualizado.`);
+                renderMarket();
+            }
+        }
+
+        renderMarket();
+    </script>
+</body>
+</html>
